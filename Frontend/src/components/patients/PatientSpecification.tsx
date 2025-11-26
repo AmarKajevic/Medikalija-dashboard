@@ -2,7 +2,7 @@ import { Link } from "react-router";
 import { useState } from "react";
 import axios from "axios";
 import { usePatientSpecification } from "../../hooks/Patient/usePatientSpecification";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../context/authContext";
 
 export default function PatientSpecification({ patientId }: { patientId: string }) {
   const { data, isLoading, isError, refetch } = usePatientSpecification(patientId);
@@ -130,13 +130,15 @@ export default function PatientSpecification({ patientId }: { patientId: string 
 
         </tbody>
       </table>
-
-      <button
-        onClick={addCosts}
-        className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-      >
-        Dodaj troškove
-      </button>
+          <div className="flex justify-end">
+          <button 
+            onClick={addCosts}
+            className="f bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+          >
+            Dodaj troškove
+          </button>
+          </div>
+      
 
     </div>
   );

@@ -230,12 +230,7 @@ export default function SpecificationViewPage() {
         </tbody>
       </table>
           <div className="flex justify-between">
-           <button
-        onClick={addCosts}
-        className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 mb-6"
-      >
-        Dodaj troškove
-      </button>
+           
 
       {/* ✅ WORD DOWNLOAD */}
       <button
@@ -243,6 +238,12 @@ export default function SpecificationViewPage() {
         className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mb-6"
       >
         Preuzmi Word dokument
+      </button>
+      <button
+        onClick={addCosts}
+        className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 mb-6"
+      >
+        Dodaj troškove
       </button>
           </div>
      
