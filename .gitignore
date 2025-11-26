@@ -1,0 +1,75 @@
+# ----------------------------------------
+# NODE & SERVER
+# ----------------------------------------
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+server/node_modules/
+server/logs/
+server/temp/
+server/.env
+server/.env.local
+
+# Build output
+dist/
+build/
+server/dist/
+server/build/
+
+# Cache
+.cache/
+.eslintcache
+vite.config.ts.timestamp*
+vite.config.js.timestamp*
+*.tsbuildinfo
+
+# ----------------------------------------
+# FRONTEND (React, Vite, Tailwind)
+# ----------------------------------------
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/.env
+frontend/.env.local
+
+# Editor settings
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated
+.DS_Store
+Thumbs.db
+
+# Optional lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# ----------------------------------------
+# Logs
+# ----------------------------------------
+*.log
+logs
+*.log.*
+npm-debug.log*
+package-lock.log
+
+# ----------------------------------------
+# Environment & secrets
+# ----------------------------------------
+.env
+.env.*
+*.local
+
+# ----------------------------------------
+# Misc
+# ----------------------------------------
+temp/
+tmp/
+*.tmp
+*.bak
+*.old
