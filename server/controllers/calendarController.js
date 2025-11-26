@@ -1,5 +1,6 @@
 import CalendarEvent from "../models/CalendarEvent.js";
 
+// GET ALL
 export const getAllEvents = async (req, res) => {
   try {
     const events = await CalendarEvent.find().sort({ start: 1 });
@@ -10,11 +11,18 @@ export const getAllEvents = async (req, res) => {
   }
 };
 
+// CREATE
 export const createEvent = async (req, res) => {
   try {
     const { title, start, end, calendar } = req.body;
 
-    const event = await CalendarEvent.create({ title, start, end, calendar });
+    const event = await CalendarEvent.create({
+      title,
+      start,
+      end,
+      calendar,
+      userId: req.user._id, // ⬅ OBAVEZNO
+    });
 
     return res.json({ success: true, event });
   } catch (error) {
@@ -23,20 +31,28 @@ export const createEvent = async (req, res) => {
   }
 };
 
+// UPDATE
 export const updateEvent = async (req, res) => {
   try {
     const { id } = req.params;
     const { title, start, end, calendar } = req.body;
 
-    const updated = await CalendarEvent.findByIdAndUpdate(
-      id,
-      { title, start, end, calendar },
-      { new: true }
-    );
-
-    if (!updated) {
+    const existing = await CalendarEvent.findById(id);
+    if (!existing) {
       return res.status(404).json({ success: false, message: "Događaj nije pronađen." });
     }
+
+    const updated = await CalendarEvent.findByIdAndUpdate(
+      id,
+      {
+        title,
+        start,
+        end,
+        calendar,
+        userId: existing.userId, // ⬅ 100% SIGURNO ZADRŽAVAMO USERA
+      },
+      { new: true }
+    );
 
     return res.json({ success: true, event: updated });
   } catch (error) {
@@ -45,6 +61,7 @@ export const updateEvent = async (req, res) => {
   }
 };
 
+// DELETE
 export const deleteEvent = async (req, res) => {
   try {
     const { id } = req.params;

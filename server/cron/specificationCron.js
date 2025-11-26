@@ -5,7 +5,7 @@ import { createNotification } from "../controllers/notificationController.js";
 
 export function startSpecificationCron() {
   // Radi svaki dan u 7:00 ujutru
-  cron.schedule("0 7 * * *", async () => {
+  cron.schedule("0 16 * * *", async () => {
     console.log("⏳ Cron: Provera specifikacija...");
 
     const today = new Date();

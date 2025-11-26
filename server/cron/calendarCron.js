@@ -5,7 +5,7 @@ import { createNotification } from "../controllers/notificationController.js";
 
 export function startCalendarCron() {
   // TEST: svakih 10 sekundi
- cron.schedule("0 */12 * * *", async () => {
+ cron.schedule("0 16 * * *", async () => {
     console.log("⏳ Cron: Provera kalendarskih događaja... ", new Date());
 
     // 1) SUTRA (lokalno)

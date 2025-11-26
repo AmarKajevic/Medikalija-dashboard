@@ -776,3 +776,35 @@ span.flatpickr-weekday,
 .simplebar-scrollbar.simplebar-visible:before {
   @apply opacity-100;
 }
+/* === FULLCALENDAR SUPER BRIGHT / PASTEL EVENT COLORS === */
+
+/* Crvena – pastel / bright coral */
+.fc-bg-crvena {
+  background-color: #ffb3b8 !important; /* Bright pastel red */
+  color: #7a0000 !important;            /* Dark red text */
+}
+
+/* Zelena – pastel mint */
+.fc-bg-zelena {
+  background-color: #b2f2bb !important; /* Bright mint green */
+  color: #0f5132 !important;            /* Dark green text */
+}
+
+/* Plava – pastel sky blue */
+.fc-bg-plava {
+  background-color: #a5d8ff !important; /* Bright sky blue */
+  color: #084298 !important;            /* Deep blue text */
+}
+
+/* Narandžasta – pastel peach */
+.fc-bg-narandzasta {
+  background-color: #ffd8a8 !important; /* Bright pastel orange */
+  color: #8a4b08 !important;            /* Dark orange/brown text */
+}
+
+/* Dot boja */
+.event-fc-color .fc-daygrid-event-dot {
+  background-color: currentColor !important;
+  border-color: currentColor !important;
+}
+
