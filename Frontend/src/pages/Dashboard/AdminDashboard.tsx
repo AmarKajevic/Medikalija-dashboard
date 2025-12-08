@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { FaUserPlus, FaUsers, FaUserShield, FaTrashAlt, FaPills, FaPrescriptionBottleAlt, FaUserNurse, FaDiaspora, FaYCombinator, FaDochub } from "react-icons/fa";
+import { FaUserPlus, FaUsers, FaUserShield, FaTrashAlt, FaPills, FaPrescriptionBottleAlt, FaUserNurse, FaDiaspora, FaYCombinator, FaDochub, FaMedkit, FaBookMedical } from "react-icons/fa";
 
 function AdminDashboard() {
   const links = [
@@ -13,6 +13,9 @@ function AdminDashboard() {
     { to: "/combinationGroup", label: "kombinacije analiza ", icon: <FaYCombinator /> },
     { to: "/articles", label: "artikli ", icon: <FaDiaspora /> },
     { to: "/nurse-actions", label: "Kontrola sestara ", icon: <FaUserNurse/> },
+    { to: "/users-list", label: "Lista korisnika aplikacije ", icon: <FaUserPlus/> },
+    { to: "/adding-to-reserve-list", label: "dodavanje rezervnih lekova", icon: <FaMedkit/> },
+    { to: "/reserve-list", label: "Lista rezervnih lekova", icon: <FaBookMedical/> },
 
 
   ];

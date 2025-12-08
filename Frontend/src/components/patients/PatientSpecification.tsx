@@ -2,7 +2,7 @@ import { Link } from "react-router";
 import { useState } from "react";
 import axios from "axios";
 import { usePatientSpecification } from "../../hooks/Patient/usePatientSpecification";
-import { useAuth } from "../../context/authContext";
+import { useAuth } from "../../context/AuthContext";
 
 export default function PatientSpecification({ patientId }: { patientId: string }) {
   const { data, isLoading, isError, refetch } = usePatientSpecification(patientId);
@@ -21,7 +21,7 @@ export default function PatientSpecification({ patientId }: { patientId: string 
   const addCosts = async () => {
     try {
       await axios.post(
-        `http://localhost:5000/api/specification/${data._id}/add-costs`, // ✅ ispravljeno
+        `https://medikalija-api.vercel.app/api/specification/${data._id}/add-costs`, // ✅ ispravljeno
         { lodgingPrice, extraCostAmount, extraCostLabel },
         { headers: { Authorization: `Bearer ${token}` } }
       );

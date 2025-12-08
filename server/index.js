@@ -1,6 +1,8 @@
 import express from "express"
 import dotenv from 'dotenv'
 import cors from 'cors'
+import cookieParser from "cookie-parser"
+
 import authRouther from "./routes/auth.js"
 import connectToDatabase from "./db/db.js"
 import patientRouter from "./routes/patient.js"
@@ -12,16 +14,14 @@ import analysisRouter from "./routes/analysis.js"
 import combinationRouter from "./routes/combination.js"
 import articlesRouter from "./routes/articles.js"
 import specificationRouter from "./routes/specification.js"
-import combinationGroupRouter from"./routes/combinationGroup.js"
+import combinationGroupRouter from "./routes/combinationGroup.js"
 import nurseActionRouter from "./routes/nurseActionsRoutes.js"
-import calendarRoutes from "./routes/calendarRoutes.js";
-import notificationRoutes from "./routes/notification.js";
-import cookieParser from "cookie-parser";
-import { startCronJobs } from "./cron/index.js";
+import calendarRoutes from "./routes/calendarRoutes.js"
+import notificationRoutes from "./routes/notification.js"
+import searchRouter from "./routes/search.js"
+import medicineReserveRouter from "./routes/medicineReserve.js";
 
-dotenv.config() // Obavezno da se .env fajl učita
-connectToDatabase()
-startCronJobs();
+dotenv.config()
 
 const app = express();
 
@@ -29,10 +29,12 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "http://localhost:5173", // 👈 tvoj frontend
-    credentials: true, // dozvoli slanje cookie-a
+    origin: "https://medikalija-frontend.vercel.app",
+    credentials: true,
   })
 );
+
+// ===== ROUTES =====
 app.use('/api/auth', authRouther)
 app.use('/api/patient', patientRouter)
 app.use('/api/diagnosis', diagnosisRouter)
@@ -47,10 +49,15 @@ app.use('/api/combinationGroup', combinationGroupRouter)
 app.use('/api/nurse-actions', nurseActionRouter)
 app.use('/api/calendar', calendarRoutes)
 app.use('/api/notifications', notificationRoutes)
+app.use("/api/search", searchRouter);
+app.use("/api/medicine-reserve", medicineReserveRouter);
 
+async function startServer() {
+  await connectToDatabase();  // ⭐ OBAVEZNO PRE STARTA SERVERA
 
+  app.listen(process.env.PORT || 5000, () =>
+    console.log(`🚀 Server running on ${process.env.PORT}`)
+  );
+}
 
-
-app.listen(process.env.PORT, () => {
-    console.log(`server is runing on ${process.env.PORT}`)
-})
+startServer();

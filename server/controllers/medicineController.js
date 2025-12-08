@@ -46,10 +46,19 @@ const addMedicine = async (req, res) => {
       quantity,
     } = req.body;
 
-    if (!name || pricePerUnit == null) {
+    // Naziv uvek mora da postoji
+    if (!name) {
       return res.status(400).json({
         success: false,
-        message: "Naziv leka i cena su obavezni.",
+        message: "Naziv leka je obavezan.",
+      });
+    }
+
+    // Cena je obavezna SAMO ako lek dodaje DOM (NE porodica)
+    if (!fromFamily && pricePerUnit == null) {
+      return res.status(400).json({
+        success: false,
+        message: "Cena je obavezna za lekove koje dodaje dom.",
       });
     }
 
@@ -313,7 +322,6 @@ const useMedicine = async (req, res) => {
         roleUsed: req.user.role,
       });
 
-      // 📌 Notifikacija vlasniku pacijenta
       await createNotification(
         patient.createdBy,
         "medicine",
@@ -367,7 +375,7 @@ const useMedicine = async (req, res) => {
       roleUsed: req.user.role,
     });
 
-    // Ako se ništa nije skinulo iz doma, ne ide u specifikaciju
+    // Ako se sve skinulo iz porodične količine → NE ULAZI u specifikaciju
     if (homeUsed === 0) {
       return res.status(200).json({
         success: true,
@@ -376,32 +384,53 @@ const useMedicine = async (req, res) => {
       });
     }
 
-    // 📌 Ulazi u specifikaciju
+    // =====================================================================
+    // 🔥 SPOJILI SMO STAVKE ZA ISTI LEK U SPECIFIKACIJI
+    // =====================================================================
     const cost = homeUsed * medicine.pricePerUnit;
     const spec = await getOrCreateActiveSpecification(patientId);
 
-    spec.items.push({
-      name: medicine.name,
-      category: "medicine",
-      amount: homeUsed,
-      price: cost,
-      date: new Date(),
-    });
+    // Da li već postoji ovaj lek u specifikaciji?
+    const existingItem = spec.items.find(
+      (i) => i.category === "medicine" && i.name === medicine.name
+    );
 
+    if (existingItem) {
+      existingItem.amount += homeUsed;           // povećaj količinu
+      existingItem.price += cost;                // dodaj cenu
+      existingItem.date = new Date();
+    } else {
+      // napravi novi red
+      spec.items.push({
+        name: medicine.name,
+        category: "medicine",
+        amount: homeUsed,
+        price: cost,
+        date: new Date(),
+      });
+    }
+
+    // =====================================================================
+    // 🔥 NOVI TOTAL PRICE
+    // =====================================================================
     spec.totalPrice =
       spec.items.reduce((sum, i) => sum + (i.price ?? 0), 0) +
-      (spec.lodgingPrice ?? 0) +
       (spec.extraCosts ?? 0);
 
     await spec.save();
 
-    return res.status(200).json({ success: true, usedRecord });
+    return res.status(200).json({
+      success: true,
+      message: "Lek dodat u specifikaciju (spojeni redovi).",
+      usedRecord,
+    });
 
   } catch (error) {
     console.error("useMedicine error:", error);
     return res.status(500).json({ success: false, message: error.message });
   }
 };
+
 
 /**
  * GET /api/medicine/patient/:patientId
@@ -422,6 +451,7 @@ const getPatientMedicine = async (req, res) => {
     return res.status(500).json({ success: false, message: error.message });
   }
 };
+
 
 export {
   addMedicine,

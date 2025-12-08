@@ -37,44 +37,55 @@ export default function SignInForm() {
   // 2️⃣ SUBMIT
   // ------------------------------------------------------
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    try {
-      const response = await axios.post(
-        "http://localhost:5000/api/auth/login",
-        { name, lastName, password },
-        { withCredentials: true }
-      );
+  try {
+    const response = await axios.post(
+      "https://medikalija-api.vercel.app/api/auth/login",
+      { name, lastName, password },
+      { withCredentials: true }
+    );
 
-      if (response.data.success) {
-        const accessToken = response.data.accessToken;
-        const user = response.data.user;
+    if (response.data.success) {
+      const accessToken = response.data.accessToken;
+      const user = response.data.user;
 
-        // 3️⃣ SAČUVAJ PODATKE AKO JE CHECKBOX UKLJUČEN
-        if (isChecked) {
-          localStorage.setItem(
-            "rememberMe",
-            JSON.stringify({ name, lastName, password })
-          );
-        } else {
-          localStorage.removeItem("rememberMe");
-        }
-
-        // login u global context
-        login(user, accessToken);
-
-        // navigacija po ulozi
-        if (user.role === "admin" || user.role === "main-nurse") {
-          navigate("/");
-        } else {
-          navigate("/nurseDashboard");
-        }
+      // sačuvaj podatke ako treba
+      if (isChecked) {
+        localStorage.setItem(
+          "rememberMe",
+          JSON.stringify({ name, lastName, password })
+        );
+      } else {
+        localStorage.removeItem("rememberMe");
       }
-    } catch (error: any) {
-      console.log(error);
-      setError(error.response?.data?.error || "Server error");
+
+      login(user, accessToken);
+
+      // ----------------------------
+      // ROLE-BASED NAVIGATION
+      // ----------------------------
+
+      if (user.role === "admin" || user.role === "main-nurse") {
+        navigate("/");
+        return;
+      }
+
+      // doktor ide kao sestra
+      if (user.role === "doctor" || user.role === "nurse") {
+        navigate("/nurseDashboard");
+        return;
+      }
+
+      // fallback zaštita
+      navigate("/unauthorized");
     }
-  };
+  } catch (error: any) {
+    console.log(error);
+    setError(error.response?.data?.error || "Server error");
+  }
+};
+
 
   return (
     <div className="flex flex-col flex-1">

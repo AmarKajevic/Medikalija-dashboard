@@ -22,7 +22,7 @@ export default function DeletePatient() {
             setLoading(true)
             try {
                 const token = localStorage.getItem("token")
-                const response = await axios.get("http://localhost:5000/api/patient", {
+                const response = await axios.get("https://medikalija-api.vercel.app/api/patient", {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -47,7 +47,7 @@ export default function DeletePatient() {
     const handleDelete = async (id: string) =>{
         if(!window.confirm("da li ste sigurni da zelite da obrisete pacijenta")) return;
         try {
-                await axios.delete(`http://localhost:5000/api/patient/${id}`, {
+                await axios.delete(`https://medikalija-api.vercel.app/api/patient/${id}`, {
                 headers:{
                     Authorization: `Bearer ${localStorage.getItem("token")}`
                 }
@@ -57,7 +57,18 @@ export default function DeletePatient() {
             console.log(error)
             setError("Greška pri brisanju pacijenta")
         }
-    }   
+    }  
+    const formatDate = (isoDate: string) => {
+        const d = new Date(isoDate);
+        if (isNaN(d.getTime())) return isoDate; // fallback u slučaju lošeg datuma
+
+        const day = String(d.getDate()).padStart(2, "0");
+        const month = String(d.getMonth() + 1).padStart(2, "0");
+        const year = d.getFullYear();
+
+        return `${day}.${month}.${year}`;
+      };
+ 
     if (loading) return <p>Učitavanje pacijenata...</p>;
      if (error) return <p>{error}</p>;
 
@@ -77,7 +88,7 @@ export default function DeletePatient() {
                 <p className="font-semibold">
                   {p.name} {p.lastName}
                 </p>
-                <p className="text-sm text-gray-600">{p.dateOfBirth}</p>
+                <p className="text-sm text-gray-600">{formatDate(p.dateOfBirth)}</p>
                 <p className="text-sm text-gray-600">{p.address}</p>
               </div>
               {(user?.role === "admin" || user?.role === "main-nurse") && (
